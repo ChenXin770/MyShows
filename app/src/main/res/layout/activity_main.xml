@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="myshow.cx.com.myshows.MainActivity">
+
+    <TextView
+        android:id="@+id/tv_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="状态:"
+        android:textColor="@android:color/holo_green_dark" />
+
+        <WebView
+            android:layout_weight="1"
+            android:id="@+id/wv_show0"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"></WebView>
+
+       <!-- <WebView
+            android:layout_weight="1"
+            android:id="@+id/wv_show1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"></WebView>
+
+        <WebView
+            android:layout_weight="1"
+            android:id="@+id/wv_show2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"></WebView>
+
+        <WebView
+            android:layout_weight="1"
+            android:id="@+id/wv_show3"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"></WebView>
+
+        <WebView
+            android:layout_weight="1"
+            android:id="@+id/wv_show4"
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+        </WebView>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/bt_start"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="开始"
+            android:textColor="@android:color/holo_green_dark" />
+
+        <Button
+            android:id="@+id/bt_reset"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="重置"
+            android:textColor="@android:color/holo_green_dark" />
+
+        <Button
+            android:id="@+id/bt_exit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="退出"
+            android:textColor="@android:color/holo_green_dark" />
+        <Button
+            android:id="@+id/bt_login"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="登录"
+            android:textColor="@android:color/holo_green_dark" />
+    </LinearLayout>
+
+</LinearLayout>
