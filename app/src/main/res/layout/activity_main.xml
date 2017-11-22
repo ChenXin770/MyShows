@@ -14,36 +14,12 @@
         android:text="状态:"
         android:textColor="@android:color/holo_green_dark" />
 
-        <WebView
-            android:layout_weight="1"
-            android:id="@+id/wv_show0"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"></WebView>
+    <WebView
+        android:id="@+id/wv_show0"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"></WebView>
 
-       <!-- <WebView
-            android:layout_weight="1"
-            android:id="@+id/wv_show1"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"></WebView>
-
-        <WebView
-            android:layout_weight="1"
-            android:id="@+id/wv_show2"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"></WebView>
-
-        <WebView
-            android:layout_weight="1"
-            android:id="@+id/wv_show3"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"></WebView>
-
-        <WebView
-            android:layout_weight="1"
-            android:id="@+id/wv_show4"
-            android:layout_width="match_parent"
-            android:layout_height="0dp">
-        </WebView>-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -59,11 +35,19 @@
             android:textColor="@android:color/holo_green_dark" />
 
         <Button
-            android:id="@+id/bt_reset"
+            android:id="@+id/bt_changeIP"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="重置"
+            android:text="换IP"
+            android:textColor="@android:color/holo_green_dark" />
+
+        <Button
+            android:id="@+id/bt_setting"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="设置"
             android:textColor="@android:color/holo_green_dark" />
 
         <Button
@@ -72,13 +56,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="退出"
-            android:textColor="@android:color/holo_green_dark" />
-        <Button
-            android:id="@+id/bt_login"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="登录"
             android:textColor="@android:color/holo_green_dark" />
     </LinearLayout>
 

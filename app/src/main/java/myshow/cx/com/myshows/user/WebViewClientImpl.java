@@ -16,7 +16,7 @@ import myshow.cx.com.myshows.utils.ThreadManager;
 
 public class WebViewClientImpl extends WebViewClient {
 
-    public static int count = 0;
+    private int count = 0;
     public static String TAG = "WebViewClientImpl";
     private OnAutoClickListener autoClickListener;
 
@@ -35,11 +35,16 @@ public class WebViewClientImpl extends WebViewClient {
     @Override
     public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
-        count++;
+       /* count = count + 1;
+        Log.d("WebViewClientImpl", count+"");
         onMyPageFinished(view);
         if (autoClickListener != null) {
             autoClickListener.onAutoClick();
-        }
+        }*/
+    }
+
+    public int getCount() {
+        return count;
     }
 
     private void onMyPageFinished(WebView wv){

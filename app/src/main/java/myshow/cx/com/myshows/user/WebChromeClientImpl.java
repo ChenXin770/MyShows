@@ -12,8 +12,6 @@ import android.webkit.WebView;
 
 public class WebChromeClientImpl extends WebChromeClient {
 
-    private Bitmap xdefaltvideo;
-    private View xprogressvideo;
 
     @Override
     public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
@@ -32,18 +30,6 @@ public class WebChromeClientImpl extends WebChromeClient {
     // 视频播放退出全屏会被调用的
     public void onHideCustomView() {
         // Log.i(LOGTAG, "set it to webVew");
-    }
-
-    // 视频加载添加默认图标
-    @Override
-    public Bitmap getDefaultVideoPoster() {
-        return xdefaltvideo;
-    }
-
-    // 视频加载时进程loading
-    @Override
-    public View getVideoLoadingProgressView() {
-        return xprogressvideo;
     }
 
     // 网页标题

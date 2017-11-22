@@ -1,22 +1,25 @@
 package myshow.cx.com.myshows;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Build;
-import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -25,24 +28,22 @@ import myshow.cx.com.myshows.user.WebViewClientImpl;
 import myshow.cx.com.myshows.user.WuJIManager;
 import myshow.cx.com.myshows.user.wuji_interface.OnAutoClickListener;
 import myshow.cx.com.myshows.user.wuji_interface.OnChangeIPSuccess;
+import myshow.cx.com.myshows.user.wuji_interface.OnCloseIPSuccess;
 import myshow.cx.com.myshows.user.wuji_interface.OnLoginSuccess;
 import myshow.cx.com.myshows.utils.Rand;
 import myshow.cx.com.myshows.utils.ThreadManager;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, OnChangeIPSuccess, OnLoginSuccess,OnAutoClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, OnChangeIPSuccess, OnLoginSuccess,OnAutoClickListener,OnCloseIPSuccess {
 
     private TextView tv_status;
     private Button bt_start;
-    private Button bt_login;
-    private Button bt_reset;
     private Button bt_exit;
-    private WebView webView0;
-  /*  private WebView webView1;
-    private WebView webView2;
-    private WebView webView3;
-    private WebView webView4;*/
-    private String[] urls = {"https://cpu.baidu.com/1001/12abe6c0", "http://www.sina.com.cn/", "http://www.163.com/", "https://www.baidu.com/", "http://www.sina.com.cn/"};
-    private List<WebViewClientImpl> webViewClients = new ArrayList<>();
+    private Button bt_setting;
+    private Button bt_changeIP;
+    private WebView webView;
+    private String[] urls = {"https://cpu.baidu.com/1025/c5b5643f", "https://cpu.baidu.com/1001/12abe6c0", "https://cpu.baidu.com/1001/12abe6c0", "https://cpu.baidu.com/1001/12abe6c0", "https://cpu.baidu.com/1001/12abe6c0"};
+    //private List<WebViewClientImpl> webViewClients = new ArrayList<>();
+
 
     private Timer timer;
     private int totalVisitor;
@@ -68,10 +69,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                totalVisitor = 0;
-                for (WebViewClientImpl webViewClient : webViewClients) {
-                    totalVisitor += webViewClient.count;
-                }
+             /*   for (WebViewClientImpl webViewClient : webViewClients) {
+                    totalVisitor = webViewClient.getCount();
+                }*/
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -86,37 +86,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         wuJIManager = new WuJIManager(this);
         wuJIManager.setOnChangeIPSuccess(this);
         wuJIManager.setOnLoginSuccess(this);
-        wuJIManager.myLogin(AppConfig.VPN_USER, AppConfig.VPN_PASS, AppConfig.VPN_ZYZX, AppConfig.VPN_DULI);
+        wuJIManager.setOnCloseIPSuccess(this);
+        //wuJIManager.initAndShow();
     }
 
     private void initView() {
         tv_status = (TextView) findViewById(R.id.tv_status);
-        bt_login = (Button) findViewById(R.id.bt_login);
-        bt_start = (Button) findViewById(R.id.bt_start);
-        bt_reset = (Button) findViewById(R.id.bt_reset);
         bt_exit = (Button) findViewById(R.id.bt_exit);
-        webView0 = (WebView) findViewById(R.id.wv_show0);
-       /* webView1 = (WebView) findViewById(R.id.wv_show1);
-        webView2 = (WebView) findViewById(R.id.wv_show2);
-        webView3 = (WebView) findViewById(R.id.wv_show3);
-        webView4 = (WebView) findViewById(R.id.wv_show4);*/
-        bt_exit.setOnClickListener(this);
+        bt_start = (Button) findViewById(R.id.bt_start);
+        bt_setting = (Button) findViewById(R.id.bt_setting);
+        bt_changeIP = (Button) findViewById(R.id.bt_changeIP);
+        webView = (WebView) findViewById(R.id.wv_show0);
+        bt_changeIP.setOnClickListener(this);
         bt_start.setOnClickListener(this);
-        bt_reset.setOnClickListener(this);
-        bt_login.setOnClickListener(this);
-        initWebView(webView0);
-        webView0.loadUrl(urls[0]);
-       /* initWebView(webView1);
-        initWebView(webView2);
-        initWebView(webView3);
-        initWebView(webView4);*/
+        bt_setting.setOnClickListener(this);
+        bt_exit.setOnClickListener(this);
+        //initWebView(webView);
+        //webView.loadUrl(urls[0]);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void initWebView(WebView webView) {
+    private void initWebViewSetting(WebView webView) {
         WebViewClientImpl client = new WebViewClientImpl();
-        client.setAutoClickListener(this);
-        webViewClients.add(client);
+        //client.setAutoClickListener(this);
+        //webViewClients.add(client);
         webView.setWebViewClient(client);
         webView.setWebChromeClient(new WebChromeClientImpl());
 
@@ -145,8 +138,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //初始化WebSettings
         final WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
-        final String ua = settings.getUserAgentString();
-        settings.setUserAgentString(ua + "Latte");
         settings.setUserAgentString(Rand.raUserAgent());
 
         //隐藏缩放控件
@@ -170,26 +161,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_start:
-                if (isShow) {
+               /* if (isShow) {
                     bt_start.setText("停止");
                     isShow = false;
                 } else {
                     bt_start.setText("开始");
                     isShow = true;
                     stopShow();
-                }
+                }*/
                 startShow();
                 break;
-            case R.id.bt_reset:
+            case R.id.bt_setting:
                 resetConfig();
+                break;
+            case R.id.bt_changeIP:
+                changeIPAndShow();
                 break;
             case R.id.bt_exit:
                 exitApp();
                 break;
-            case R.id.bt_login:
-                login();
-                break;
         }
+    }
+
+    private void changeIPAndShow() {
+        wuJIManager.changeIPAndShow();
     }
 
     private void stopShow() {
@@ -205,50 +200,94 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void exitApp() {
-        finish();
-        System.exit(0);
+        wuJIManager.closeIPOnThread();
     }
 
     private void resetConfig() {
-
+        showConfigDialog();
     }
 
     private void startShow() {
-        wuJIManager.startShow();
-        if (!isLogin) {
+       // wuJIManager.startShow();
+        wuJIManager.initAndShow();
+      /*  if (!isLogin) {
             Toast.makeText(this, "还未登入VPN", Toast.LENGTH_SHORT).show();
             return;
-        }
+        }*/
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onChangeIPSuccess() {
+        removeAllView();
         Toast.makeText(this, "Change IP Success", Toast.LENGTH_SHORT).show();
-        clearWebViewAllData(webView0);
-       /* clearWebViewAllData(webView1);
-        clearWebViewAllData(webView2);
-        clearWebViewAllData(webView3);
-        clearWebViewAllData(webView4);*/
-        webView0.loadUrl(urls[0]);
-      /*  webView1.loadUrl(urls[1]);
-        webView2.loadUrl(urls[2]);
-        webView3.loadUrl(urls[3]);
-        webView4.loadUrl(urls[4]);*/
+        clearWebViewAllData(webView);
+        resetUserAgent();
+        webView.loadUrl(urls[0]);
+        totalVisitor ++;
+        tv_status.setText("状态： 浏览量="+totalVisitor);
+    }
+
+    private void removeAllView() {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void clearWebViewAllData(WebView webView) {
-        webView.clearCache(true);
-        webView.clearFormData();
-        webView.clearHistory();
         webView.clearMatches();
         webView.clearDisappearingChildren();
+        webView.clearHistory();
+        webView.clearFormData();
+        webView.clearCache(true);
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.setAcceptCookie(true);
+        cookieManager.removeSessionCookie();
+        cookieManager.removeAllCookie();
+        resetUserAgent();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    private void resetUserAgent() {
+        initWebViewSetting(webView);
     }
 
     @Override
     public void onLoginSuccess() {
-        Toast.makeText(this, "Login Success", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
         isLogin = true;
+    }
+
+    private void showConfigDialog() {
+    /* @setView 装入自定义View ==> R.layout.dialog_customize
+     * 由于dialog_customize.xml只放置了一个EditView，因此和图8一样
+     * dialog_customize.xml可自定义更复杂的View
+     */
+        AlertDialog.Builder customizeDialog =
+                new AlertDialog.Builder(MainActivity.this);
+        final View dialogView = LayoutInflater.from(MainActivity.this)
+                .inflate(R.layout.config_layout, null);
+        customizeDialog.setTitle("设置");
+        customizeDialog.setView(dialogView);
+
+        final EditText txtUrl =
+                (EditText) dialogView.findViewById(R.id.txtUrl);
+        final EditText txtVpnUserName = (EditText) dialogView.findViewById(R.id.txtVpnUserName);
+        final EditText txtVpnPwd = (EditText) dialogView.findViewById(R.id.txtVpnpwd);
+        final Switch swVpnType = (Switch) dialogView.findViewById(R.id.swVpnType);
+        final Switch swIsVpnDuLi = (Switch) dialogView.findViewById(R.id.swIsVpnDuLi);
+
+        customizeDialog.setPositiveButton("确定",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                       /* UserInfo.showURL = txtUrl.getText().toString();
+                        UserInfo.vpnUser = txtVpnUserName.getText().toString();
+                        UserInfo.vpnPass = txtVpnPwd.getText().toString();
+                        UserInfo.vpnDuLi = swIsVpnDuLi.isChecked() ? 1 : 0;
+                        UserInfo.vpnZYZX = swVpnType.isChecked() ? 0 : 1;*/
+                    }
+                });
+        customizeDialog.show();
     }
 
     private void autoClick(final WebView wv) {
@@ -303,6 +342,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onAutoClick() {
-        autoClick(webView0);
+        autoClick(webView);
+    }
+
+    @Override
+    public void onCloseIPSuccess() {
+        finish();
     }
 }
